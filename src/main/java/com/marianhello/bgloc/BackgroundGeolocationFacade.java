@@ -214,8 +214,16 @@ public class BackgroundGeolocationFacade {
     public void start() {
         logger.debug("Starting service");
 
+        List<String> PermissionsList = new ArrayList(Arrays.asList(PERMISSIONS));
+        if(Build.VERSION.SDK_INT > 28 ){
+          PermissionsList.add(Manifest.permission.ACTIVITY_RECOGNITION);
+          logger.info("------- HIGHER - SDK_INT > 28");
+        } else {
+          logger.info("-------- LOWER - SDK_INT <= 28");
+        }
+
         PermissionManager permissionManager = PermissionManager.getInstance(getContext());
-        permissionManager.checkPermissions(Arrays.asList(PERMISSIONS), new PermissionManager.PermissionRequestListener() {
+        permissionManager.checkPermissions(PermissionsList, new PermissionManager.PermissionRequestListener() {
             @Override
             public void onPermissionGranted() {
                 logger.info("User granted requested permissions");
